@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+* {
+  font-family: Inter, sans-serif;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(59, 130, 246, 0.25),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(168, 85, 247, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(180deg, #111827 0%, #0f172a 100%);
+
+  color: white;
+
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+
+  border-radius: 999px;
+}
+
+/* IOS INPUT */
+
+input,
+select,
+button,
+textarea {
+  font-size: 16px;
+}
+
+/* GLASS EFFECT */
+
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* SMOOTH */
+
+button,
+input,
+select {
+  transition: all 0.2s ease;
+}
+
+/* INPUT FOCUS */
+
+input:focus,
+select:focus {
+  outline: none;
+
+  border-color: rgba(255, 255, 255, 0.2);
+
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+/* BUTTON PRESS */
+
+button:active {
+  transform: scale(0.98);
+}
