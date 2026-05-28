@@ -1,4 +1,5 @@
 
+
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -107,13 +108,19 @@ export default function RevenueChart({
     ];
 
   // =========================
-  // COMPARE MONTH
+  // AUTO COMPARE
   // =========================
+  const currentMonth =
+    months[months.length - 1];
+
+  const previousMonth =
+    months[months.length - 2];
+
   const currentMonthValue =
-    values[values.length - 1] || 0;
+    grouped[currentMonth] || 0;
 
   const previousMonthValue =
-    values[values.length - 2] || 0;
+    grouped[previousMonth] || 0;
 
   const diffValue =
     currentMonthValue -
@@ -144,6 +151,17 @@ export default function RevenueChart({
       )}`;
     }
   );
+
+  const formatMonth = (
+    month
+  ) => {
+    const [year, m] =
+      month.split("-");
+
+    return `${m}/${year.slice(
+      2
+    )}`;
+  };
 
   // =========================
   // CHART DATA
@@ -300,6 +318,7 @@ export default function RevenueChart({
             shadow-[0_15px_35px_rgba(124,58,237,0.35)]
           "
         >
+          {/* GLOW */}
           <div
             className="
               absolute
@@ -351,7 +370,7 @@ export default function RevenueChart({
           </div>
         </motion.div>
 
-        {/* COMPARE MONTH */}
+        {/* AUTO COMPARE */}
         <motion.div
           initial={{
             opacity: 0,
@@ -375,8 +394,9 @@ export default function RevenueChart({
             shadow-[0_10px_30px_rgba(0,0,0,0.03)]
           "
         >
+          {/* GLOW */}
           <div
-            className="
+            className={`
               absolute
               -top-10
               -right-10
@@ -386,13 +406,14 @@ export default function RevenueChart({
               blur-3xl
               ${
                 isIncrease
-                  ? 'bg-emerald-200/20'
-                  : 'bg-rose-200/20'
+                  ? "bg-emerald-200/20"
+                  : "bg-rose-200/20"
               }
-            "
+            `}
           />
 
           <div className="relative z-10">
+            {/* ICON */}
             <div
               className={`
                 w-12
@@ -419,10 +440,18 @@ export default function RevenueChart({
               )}
             </div>
 
+            {/* LABEL */}
             <p className="mt-4 text-slate-500 text-sm">
-              So với tháng trước
+              {formatMonth(
+                currentMonth
+              )}{" "}
+              vs{" "}
+              {formatMonth(
+                previousMonth
+              )}
             </p>
 
+            {/* PERCENT */}
             <h2
               className={`
                 mt-2
@@ -442,6 +471,7 @@ export default function RevenueChart({
               {diffPercent}%
             </h2>
 
+            {/* MONEY */}
             <p
               className={`
                 mt-2
@@ -491,6 +521,7 @@ export default function RevenueChart({
           shadow-[0_15px_40px_rgba(15,23,42,0.04)]
         "
       >
+        {/* GLOW */}
         <div
           className="
             absolute
