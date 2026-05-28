@@ -49,7 +49,10 @@ export default function SaleForm({ onSubmit }) {
       Swal.fire({
         icon: "warning",
         title: "Vui lòng nhập số bàn",
+        background: "#0f172a",
+        color: "#fff",
       });
+
       return;
     }
 
@@ -70,6 +73,8 @@ export default function SaleForm({ onSubmit }) {
         title: "Đã lưu doanh thu",
         timer: 1200,
         showConfirmButton: false,
+        background: "#0f172a",
+        color: "#fff",
       });
 
       resetForm();
@@ -77,25 +82,40 @@ export default function SaleForm({ onSubmit }) {
       Swal.fire({
         icon: "error",
         title: "Có lỗi xảy ra",
+        background: "#0f172a",
+        color: "#fff",
       });
     }
   };
 
   const inputClass = `
     w-full
-    h-[58px]
-    bg-[#f8fafc]
+    h-[60px]
+
+    bg-white/[0.03]
+    backdrop-blur-xl
+
     border
-    border-slate-200/70
+    border-white/10
+
     rounded-2xl
+
     px-4
+
     text-[15px]
-    text-slate-800
+    text-white
+
     outline-none
+
     transition-all
-    focus:border-violet-300
-    focus:ring-4
-    focus:ring-violet-100
+    duration-300
+
+    placeholder:text-slate-500
+
+    focus:border-cyan-400/40
+    focus:bg-cyan-400/[0.03]
+
+    focus:shadow-[0_0_25px_rgba(34,211,238,0.12)]
   `;
 
   return (
@@ -112,55 +132,95 @@ export default function SaleForm({ onSubmit }) {
       className="
         relative
         overflow-hidden
-        rounded-[32px]
-        bg-white
+
+        rounded-[34px]
+
+        bg-white/[0.03]
+        backdrop-blur-2xl
+
         border
-        border-white/60
-        shadow-[0_20px_50px_rgba(15,23,42,0.06)]
+        border-cyan-400/20
+
+        shadow-[0_0_40px_rgba(34,211,238,0.05)]
+
         p-5
       "
     >
-      {/* BLUR */}
+      {/* BORDER GLOW */}
       <div
         className="
           absolute
-          -top-10
-          -right-10
-          w-40
-          h-40
+          inset-0
+          rounded-[34px]
+          p-[1px]
+
+          bg-gradient-to-br
+          from-cyan-400/30
+          via-fuchsia-500/10
+          to-blue-500/20
+
+          [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
+          [mask-composite:exclude]
+
+          pointer-events-none
+        "
+      />
+
+      {/* CYAN GLOW */}
+      <div
+        className="
+          absolute
+          -top-20
+          -right-20
+          w-72
+          h-72
           rounded-full
-          bg-violet-200/30
+          bg-cyan-400/10
+          blur-3xl
+        "
+      />
+
+      {/* PURPLE GLOW */}
+      <div
+        className="
+          absolute
+          bottom-0
+          -left-20
+          w-72
+          h-72
+          rounded-full
+          bg-fuchsia-500/10
           blur-3xl
         "
       />
 
       {/* HEADER */}
-      <div className="relative z-10 mb-5">
+      <div className="relative z-10 mb-6">
         <p
           className="
             text-[11px]
             uppercase
-            tracking-[0.25em]
-            text-slate-400
-            font-medium
+            tracking-[0.35em]
+            text-cyan-300/60
+            font-semibold
           "
         >
-          Commission
+          COMMISSION
         </p>
 
         <h2
           className="
-            mt-2
-            text-[28px]
-            font-bold
+            mt-3
+            text-[30px]
+            font-black
             tracking-tight
-            text-slate-900
+            text-white
           "
         >
           Thêm giao dịch
         </h2>
 
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-400 mt-2">
           Nhập doanh thu hôm nay
         </p>
       </div>
@@ -170,15 +230,24 @@ export default function SaleForm({ onSubmit }) {
         className="
           relative
           z-10
-          mb-5
+
+          mb-6
+
           p-1
-          rounded-2xl
-          bg-slate-100
+
+          rounded-[24px]
+
+          bg-white/[0.03]
+
+          border
+          border-white/10
+
           grid
           grid-cols-2
-          gap-1
+          gap-2
         "
       >
+        {/* WINE */}
         <button
           type="button"
           onClick={() =>
@@ -188,24 +257,33 @@ export default function SaleForm({ onSubmit }) {
             })
           }
           className={`
-            h-[52px]
-            rounded-2xl
+            h-[56px]
+            rounded-[20px]
+
             text-sm
             font-semibold
+
             transition-all
+            duration-300
+
             flex
             items-center
             justify-center
             gap-2
+
             ${
               form.type === "wine"
                 ? `
-                  bg-white
-                  text-violet-600
-                  shadow-sm
+                  bg-cyan-400/10
+                  border
+                  border-cyan-400/30
+                  text-cyan-300
+
+                  shadow-[0_0_20px_rgba(34,211,238,0.15)]
                 `
                 : `
-                  text-slate-500
+                  text-slate-400
+                  hover:bg-white/[0.03]
                 `
             }
           `}
@@ -215,6 +293,7 @@ export default function SaleForm({ onSubmit }) {
           Rượu
         </button>
 
+        {/* ABALONE */}
         <button
           type="button"
           onClick={() =>
@@ -224,25 +303,34 @@ export default function SaleForm({ onSubmit }) {
             })
           }
           className={`
-            h-[52px]
-            rounded-2xl
+            h-[56px]
+            rounded-[20px]
+
             text-sm
             font-semibold
+
             transition-all
+            duration-300
+
             flex
             items-center
             justify-center
             gap-2
+
             ${
               form.type ===
               "abalone"
                 ? `
-                  bg-white
-                  text-emerald-600
-                  shadow-sm
+                  bg-fuchsia-500/10
+                  border
+                  border-fuchsia-500/30
+                  text-fuchsia-300
+
+                  shadow-[0_0_20px_rgba(168,85,247,0.15)]
                 `
                 : `
-                  text-slate-500
+                  text-slate-400
+                  hover:bg-white/[0.03]
                 `
             }
           `}
@@ -254,10 +342,10 @@ export default function SaleForm({ onSubmit }) {
       </div>
 
       {/* FORM */}
-      <div className="relative z-10 space-y-4">
+      <div className="relative z-10 space-y-5">
         {/* DATE */}
         <div>
-          <label className="text-sm font-medium text-slate-600 mb-2 block">
+          <label className="text-sm font-medium text-slate-300 mb-2 block">
             Ngày
           </label>
 
@@ -269,7 +357,7 @@ export default function SaleForm({ onSubmit }) {
                 left-4
                 top-1/2
                 -translate-y-1/2
-                text-slate-400
+                text-cyan-300/70
               "
             />
 
@@ -287,7 +375,7 @@ export default function SaleForm({ onSubmit }) {
         {form.type === "wine" && (
           <>
             <div>
-              <label className="text-sm font-medium text-slate-600 mb-2 block">
+              <label className="text-sm font-medium text-slate-300 mb-2 block">
                 Loại rượu
               </label>
 
@@ -297,18 +385,24 @@ export default function SaleForm({ onSubmit }) {
                 onChange={handleChange}
                 className={inputClass}
               >
-                <option value="1m">
+                <option
+                  value="1m"
+                  className="bg-[#0f172a]"
+                >
                   Rượu {">"} 1 triệu
                 </option>
 
-                <option value="3m">
+                <option
+                  value="3m"
+                  className="bg-[#0f172a]"
+                >
                   Rượu {">"} 3 triệu
                 </option>
               </select>
             </div>
 
             <div>
-              <label className="text-sm font-medium text-slate-600 mb-2 block">
+              <label className="text-sm font-medium text-slate-300 mb-2 block">
                 Số lượng
               </label>
 
@@ -328,7 +422,7 @@ export default function SaleForm({ onSubmit }) {
         {form.type ===
           "abalone" && (
           <div>
-            <label className="text-sm font-medium text-slate-600 mb-2 block">
+            <label className="text-sm font-medium text-slate-300 mb-2 block">
               Số lượng bào ngư
             </label>
 
@@ -345,7 +439,7 @@ export default function SaleForm({ onSubmit }) {
 
         {/* TABLE */}
         <div>
-          <label className="text-sm font-medium text-slate-600 mb-2 block">
+          <label className="text-sm font-medium text-slate-300 mb-2 block">
             Số bàn
           </label>
 
@@ -357,7 +451,7 @@ export default function SaleForm({ onSubmit }) {
                 left-4
                 top-1/2
                 -translate-y-1/2
-                text-slate-400
+                text-cyan-300/70
               "
             />
 
@@ -374,7 +468,7 @@ export default function SaleForm({ onSubmit }) {
 
         {/* SHIFT */}
         <div>
-          <label className="text-sm font-medium text-slate-600 mb-2 block">
+          <label className="text-sm font-medium text-slate-300 mb-2 block">
             Ca làm
           </label>
 
@@ -386,7 +480,7 @@ export default function SaleForm({ onSubmit }) {
                 left-4
                 top-1/2
                 -translate-y-1/2
-                text-slate-400
+                text-cyan-300/70
               "
             />
 
@@ -396,11 +490,17 @@ export default function SaleForm({ onSubmit }) {
               onChange={handleChange}
               className={`${inputClass} pl-12`}
             >
-              <option value="Sáng">
+              <option
+                value="Sáng"
+                className="bg-[#0f172a]"
+              >
                 Sáng
               </option>
 
-              <option value="Tối">
+              <option
+                value="Tối"
+                className="bg-[#0f172a]"
+              >
                 Tối
               </option>
             </select>
@@ -410,27 +510,57 @@ export default function SaleForm({ onSubmit }) {
 
       {/* BUTTON */}
       <motion.button
+        whileHover={{
+          scale: 1.01,
+        }}
         whileTap={{
           scale: 0.97,
         }}
         type="submit"
         className="
           relative
+          overflow-hidden
+
           z-10
-          mt-6
+
+          mt-7
+
           w-full
-          h-[60px]
-          rounded-2xl
+          h-[62px]
+
+          rounded-[22px]
+
           bg-gradient-to-r
-          from-violet-600
-          to-indigo-500
+          from-cyan-400
+          via-blue-500
+          to-fuchsia-500
+
           text-white
           text-[16px]
-          font-semibold
-          shadow-[0_10px_30px_rgba(124,58,237,0.35)]
+          font-bold
+
+          shadow-[0_0_30px_rgba(34,211,238,0.35)]
+
+          transition-all
+          duration-300
+
+          hover:shadow-[0_0_45px_rgba(34,211,238,0.5)]
         "
       >
-        Lưu doanh thu
+        <div
+          className="
+            absolute
+            inset-0
+            bg-white/10
+            opacity-0
+            hover:opacity-100
+            transition-all
+          "
+        />
+
+        <span className="relative z-10">
+          Lưu doanh thu
+        </span>
       </motion.button>
     </motion.form>
   );

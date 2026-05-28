@@ -1,208 +1,221 @@
 import { formatMoney } from "../utils/calculateCommission";
 import { motion } from "framer-motion";
-import { Wine, Shell, Wallet2 } from "lucide-react";
 
-export default function SummaryCards({ sales }) {
-  const totalMoney = sales.reduce(
-    (acc, item) => acc + Number(item.commission || 0),
-    0
-  );
+import {
+  Wine,
+  Shell,
+  Wallet2,
+} from "lucide-react";
 
-  const totalWine = sales.filter(
-    (item) => item.type === "wine"
-  ).length;
-
-  const totalAbalone = sales
-    .filter((item) => item.type === "abalone")
-    .reduce(
-      (acc, item) => acc + Number(item.abaloneQty || 0),
+export default function SummaryCards({
+  sales,
+}) {
+  const totalMoney =
+    sales.reduce(
+      (acc, item) =>
+        acc +
+        Number(
+          item.commission || 0
+        ),
       0
     );
 
+  const totalWine =
+    sales.filter(
+      (item) =>
+        item.type === "wine"
+    ).length;
+
+  const totalAbalone =
+    sales
+      .filter(
+        (item) =>
+          item.type ===
+          "abalone"
+      )
+      .reduce(
+        (acc, item) =>
+          acc +
+          Number(
+            item.abaloneQty ||
+              0
+          ),
+        0
+      );
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* HERO CARD */}
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{
+          opacity: 0,
+          y: 15,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        whileHover={{
+          y: -3,
+        }}
         className="
+          group
           relative
           overflow-hidden
-          rounded-[30px]
-          p-5
-          bg-gradient-to-br
-          from-violet-600
-          via-purple-500
-          to-indigo-500
-          text-white
-          shadow-[0_15px_40px_rgba(124,58,237,0.35)]
+
+          rounded-[34px]
+
+          bg-white/[0.03]
+          backdrop-blur-2xl
+
+          border
+          border-cyan-400/20
+
+          p-6
+
+          shadow-[0_0_40px_rgba(34,211,238,0.06)]
+
+          transition-all
+          duration-300
         "
       >
-        {/* blur */}
+        {/* NEON BORDER */}
         <div
           className="
             absolute
-            -right-10
-            -top-10
-            w-40
-            h-40
+            inset-0
+            rounded-[34px]
+            p-[1px]
+
+            bg-gradient-to-br
+            from-cyan-400/30
+            via-fuchsia-500/10
+            to-blue-500/20
+
+            [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
+            [mask-composite:exclude]
+
+            pointer-events-none
+          "
+        />
+
+        {/* CYAN GLOW */}
+        <div
+          className="
+            absolute
+            -right-20
+            -top-20
+
+            w-72
+            h-72
+
             rounded-full
-            bg-white/10
+
+            bg-cyan-400/15
+
             blur-3xl
           "
         />
 
-        <div className="relative z-10 flex items-start justify-between">
+        {/* PURPLE GLOW */}
+        <div
+          className="
+            absolute
+            bottom-0
+            left-0
+
+            w-52
+            h-52
+
+            rounded-full
+
+            bg-fuchsia-500/10
+
+            blur-3xl
+          "
+        />
+
+        <div
+          className="
+            relative
+            z-10
+            flex
+            items-start
+            justify-between
+            gap-4
+          "
+        >
+          {/* LEFT */}
           <div>
-            <p className="text-white/70 text-sm">
+            <p
+              className="
+                text-cyan-300/65
+                text-sm
+              "
+            >
               Tổng thu nhập
             </p>
 
             <h2
               className="
-                mt-2
-                text-[32px]
+                mt-3
+
+                text-[38px]
                 leading-none
-                font-bold
+
+                font-black
+
                 tracking-tight
+
+                text-white
               "
             >
-              {formatMoney(totalMoney)}
+              {formatMoney(
+                totalMoney
+              )}
             </h2>
 
-            <div
-              className="
-                mt-4
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                bg-white/15
-                px-3
-                py-1.5
-                text-xs
-                backdrop-blur-xl
-              "
-            >
-              <span>▲ 12.5%</span>
-              <span className="text-white/70">
-                so với tháng trước
-              </span>
-            </div>
+
           </div>
 
+          {/* ICON */}
           <div
             className="
-              w-14
-              h-14
-              rounded-2xl
-              bg-white/15
+              shrink-0
+
+              w-16
+              h-16
+
+              rounded-[22px]
+
+              bg-cyan-400/10
+
+              border
+              border-cyan-400/20
+
+              text-cyan-300
+
               backdrop-blur-xl
+
               flex
               items-center
               justify-center
+
+              shadow-[0_0_30px_rgba(34,211,238,0.15)]
             "
           >
-            <Wallet2 size={28} />
+            <Wallet2 size={30} />
           </div>
         </div>
       </motion.div>
 
       {/* SMALL CARDS */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-5">
         {/* WINE */}
-        <motion.div
-          whileTap={{ scale: 0.98 }}
-          className="
-            rounded-[26px]
-            bg-white
-            p-4
-            border border-slate-100
-            shadow-[0_10px_30px_rgba(0,0,0,0.04)]
-          "
-        >
-          <div
-            className="
-              w-12
-              h-12
-              rounded-2xl
-              bg-amber-100
-              flex
-              items-center
-              justify-center
-              mb-4
-            "
-          >
-            <Wine className="text-amber-600" size={22} />
-          </div>
 
-          <p className="text-slate-500 text-sm">
-            Rượu
-          </p>
-
-          <h3
-            className="
-              mt-1
-              text-3xl
-              font-bold
-              tracking-tight
-              text-slate-900
-            "
-          >
-            {totalWine}
-          </h3>
-
-          <p className="mt-1 text-xs text-slate-400">
-            Đơn đã bán
-          </p>
-        </motion.div>
 
         {/* ABALONE */}
-        <motion.div
-          whileTap={{ scale: 0.98 }}
-          className="
-            rounded-[26px]
-            bg-white
-            p-4
-            border border-slate-100
-            shadow-[0_10px_30px_rgba(0,0,0,0.04)]
-          "
-        >
-          <div
-            className="
-              w-12
-              h-12
-              rounded-2xl
-              bg-emerald-100
-              flex
-              items-center
-              justify-center
-              mb-4
-            "
-          >
-            <Shell className="text-emerald-600" size={22} />
-          </div>
 
-          <p className="text-slate-500 text-sm">
-            Bào ngư
-          </p>
-
-          <h3
-            className="
-              mt-1
-              text-3xl
-              font-bold
-              tracking-tight
-              text-slate-900
-            "
-          >
-            {totalAbalone}
-          </h3>
-
-          <p className="mt-1 text-xs text-slate-400">
-            Sản lượng
-          </p>
-        </motion.div>
       </div>
     </div>
   );

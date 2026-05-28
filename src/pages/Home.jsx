@@ -32,144 +32,102 @@ export default function Home() {
   };
 
   return (
-    <div
-      className="
-        min-h-screen
-        bg-[#f4f7fb]
-        overflow-x-hidden
-        pb-32
-      "
-    >
-      {/* IOS SAFE AREA */}
-      <div className="h-[env(safe-area-inset-top)] bg-[#f4f7fb]" />
+    <div className="relative min-h-screen text-white">
 
-      <div className="px-4 pt-3">
+      <div className="relative z-10 px-4 pt-3">
+
         {/* HEADER */}
         <motion.div
-          initial={{ opacity: 0, y: -15 }}
+          initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
           className="mb-5"
         >
-          <div
-            className="
-              relative
-              overflow-hidden
-              rounded-[28px]
-              bg-white/80
-              backdrop-blur-3xl
-              border border-white/60
-              shadow-[0_8px_30px_rgba(0,0,0,0.05)]
-              px-5
-              py-5
-            "
-          >
-            {/* blur orb */}
-            <div
-              className="
-                absolute
-                -top-10
-                -right-10
-                w-32
-                h-32
-                rounded-full
-                bg-violet-200/40
-                blur-3xl
-              "
-            />
+          <div className="
+            relative
+            overflow-hidden
+            rounded-[28px]
+            border border-white/10
+            bg-white/[0.04]
+            backdrop-blur-2xl
+            p-5
+            shadow-[0_0_40px_rgba(0,255,255,0.04)]
+          ">
+
+            {/* glow */}
+            <div className="absolute -top-20 -right-10 w-72 h-72 bg-cyan-500/10 blur-3xl rounded-full" />
+            <div className="absolute -bottom-20 -left-10 w-72 h-72 bg-fuchsia-500/10 blur-3xl rounded-full" />
 
             <div className="relative z-10 flex items-center justify-between">
+
               <div>
-                <p
-                  className="
-                    text-[11px]
-                    font-medium
-                    tracking-[0.25em]
-                    uppercase
-                    text-slate-400
-                    mb-1
-                  "
-                >
-                  Commission
+                <p className="text-[11px] tracking-[0.35em] uppercase text-cyan-200/50">
+                  MMO COMMISSION
                 </p>
 
-                <h1
-                  className="
-                    text-[28px]
-                    leading-none
-                    font-semibold
-                    tracking-tight
-                    text-slate-900
-                  "
-                >
+                <h1 className="text-[30px] font-black mt-2">
                   Dashboard
                 </h1>
 
-                <p className="text-sm text-slate-500 mt-2">
+                <p className="text-sm text-slate-400 mt-2">
                   Quản lý doanh thu rượu & bào ngư
                 </p>
               </div>
 
-              <div
-                className="
-                  w-14
-                  h-14
-                  rounded-2xl
-                  bg-gradient-to-br
-                  from-violet-500
-                  to-indigo-500
-                  flex
-                  items-center
-                  justify-center
-                  text-white
-                  font-semibold
-                  shadow-lg
-                "
-              >
-                A
+              <div className="relative">
+                <div className="absolute inset-0 bg-violet-500/20 blur-xl rounded-2xl" />
+                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 flex items-center justify-center font-bold">
+                  A
+                </div>
               </div>
+
             </div>
           </div>
         </motion.div>
 
         {/* SUMMARY */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
           className="mb-5"
         >
-          <SummaryCards sales={sales} />
+          <div className="rounded-[28px] bg-white/[0.03] border border-white/10 backdrop-blur-xl p-3">
+            <SummaryCards sales={sales} />
+          </div>
         </motion.div>
 
-        {/* FORM SECTION */}
+        {/* FORM */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <div
-            className="
-              rounded-[30px]
-              bg-white
-              border border-slate-100
-              shadow-[0_10px_40px_rgba(0,0,0,0.04)]
-              p-4
-            "
-          >
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-slate-900">
-                Thêm giao dịch
-              </h2>
+          <div className="
+            relative
+            overflow-hidden
+            rounded-[30px]
+            border border-white/10
+            bg-white/[0.03]
+            backdrop-blur-2xl
+            p-4
+          ">
 
-              <p className="text-sm text-slate-500 mt-1">
+            <div className="absolute -top-24 -right-24 w-80 h-80 bg-cyan-500/10 blur-3xl rounded-full" />
+
+            <div className="relative z-10 mb-4">
+              <h2 className="text-lg font-bold">Thêm giao dịch</h2>
+              <p className="text-sm text-slate-400 mt-1">
                 Nhập thông tin commission hôm nay
               </p>
             </div>
 
-            <SaleForm onSubmit={handleCreate} />
+            <div className="relative z-10">
+              <SaleForm onSubmit={handleCreate} />
+            </div>
+
           </div>
         </motion.div>
+
       </div>
     </div>
   );
