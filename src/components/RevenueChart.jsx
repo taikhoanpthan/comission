@@ -1,3 +1,4 @@
+
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -15,6 +16,7 @@ import { motion } from "framer-motion";
 
 import {
   TrendingUp,
+  TrendingDown,
   Wallet2,
 } from "lucide-react";
 
@@ -103,6 +105,31 @@ export default function RevenueChart({
     months[
       values.indexOf(maxValue)
     ];
+
+  // =========================
+  // COMPARE MONTH
+  // =========================
+  const currentMonthValue =
+    values[values.length - 1] || 0;
+
+  const previousMonthValue =
+    values[values.length - 2] || 0;
+
+  const diffValue =
+    currentMonthValue -
+    previousMonthValue;
+
+  const diffPercent =
+    previousMonthValue > 0
+      ? (
+          (diffValue /
+            previousMonthValue) *
+          100
+        ).toFixed(1)
+      : 0;
+
+  const isIncrease =
+    diffValue >= 0;
 
   // =========================
   // FORMAT LABEL
@@ -273,7 +300,6 @@ export default function RevenueChart({
             shadow-[0_15px_35px_rgba(124,58,237,0.35)]
           "
         >
-          {/* GLOW */}
           <div
             className="
               absolute
@@ -325,7 +351,7 @@ export default function RevenueChart({
           </div>
         </motion.div>
 
-        {/* TREND */}
+        {/* COMPARE MONTH */}
         <motion.div
           initial={{
             opacity: 0,
@@ -349,7 +375,6 @@ export default function RevenueChart({
             shadow-[0_10px_30px_rgba(0,0,0,0.03)]
           "
         >
-          {/* GLOW */}
           <div
             className="
               absolute
@@ -358,48 +383,84 @@ export default function RevenueChart({
               w-32
               h-32
               rounded-full
-              bg-emerald-200/20
               blur-3xl
+              ${
+                isIncrease
+                  ? 'bg-emerald-200/20'
+                  : 'bg-rose-200/20'
+              }
             "
           />
 
           <div className="relative z-10">
             <div
-              className="
+              className={`
                 w-12
                 h-12
                 rounded-2xl
-                bg-emerald-100
-                text-emerald-600
                 flex
                 items-center
                 justify-center
-              "
+                ${
+                  isIncrease
+                    ? "bg-emerald-100 text-emerald-600"
+                    : "bg-rose-100 text-rose-600"
+                }
+              `}
             >
-              <TrendingUp
-                size={22}
-              />
+              {isIncrease ? (
+                <TrendingUp
+                  size={22}
+                />
+              ) : (
+                <TrendingDown
+                  size={22}
+                />
+              )}
             </div>
 
             <p className="mt-4 text-slate-500 text-sm">
-              Cao nhất
+              So với tháng trước
             </p>
 
             <h2
-              className="
+              className={`
                 mt-2
-                text-[22px]
+                text-[28px]
                 leading-none
                 font-bold
-                text-slate-900
-              "
+                ${
+                  isIncrease
+                    ? "text-emerald-600"
+                    : "text-rose-600"
+                }
+              `}
             >
-              {bestMonth}
+              {isIncrease
+                ? "+"
+                : ""}
+              {diffPercent}%
             </h2>
 
-            <p className="mt-2 text-emerald-500 text-sm font-semibold">
+            <p
+              className={`
+                mt-2
+                text-sm
+                font-semibold
+                ${
+                  isIncrease
+                    ? "text-emerald-500"
+                    : "text-rose-500"
+                }
+              `}
+            >
+              {isIncrease
+                ? "+"
+                : "-"}
               {formatMoney(
-                maxValue
+                Math.abs(
+                  diffValue
+                )
               )}
             </p>
           </div>
@@ -430,7 +491,6 @@ export default function RevenueChart({
           shadow-[0_15px_40px_rgba(15,23,42,0.04)]
         "
       >
-        {/* GLOW */}
         <div
           className="
             absolute
