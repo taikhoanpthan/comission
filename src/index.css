@@ -2,8 +2,8 @@
 
 * {
   font-family: Inter, sans-serif;
-
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
 html,
@@ -12,29 +12,50 @@ body,
   min-height: 100%;
 }
 
+html {
+  background: #f4f7fb;
+}
+
 body {
+  margin: 0;
+  overflow-x: hidden;
+  color: #0f172a;
+
   background:
     radial-gradient(
       circle at top left,
-      rgba(59, 130, 246, 0.25),
-      transparent 30%
+      rgba(59, 130, 246, 0.12),
+      transparent 28%
     ),
     radial-gradient(
       circle at top right,
-      rgba(168, 85, 247, 0.18),
-      transparent 30%
+      rgba(168, 85, 247, 0.10),
+      transparent 26%
     ),
-    linear-gradient(180deg, #111827 0%, #0f172a 100%);
+    linear-gradient(
+      180deg,
+      #f8fafc 0%,
+      #f1f5f9 40%,
+      #eef2ff 100%
+    );
 
-  color: white;
-
-  overflow-x: hidden;
+  background-attachment: fixed;
 }
 
-/* SCROLLBAR */
+/* SAFE AREA */
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* SCROLL */
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -42,8 +63,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-
+  background: rgba(148, 163, 184, 0.35);
   border-radius: 999px;
 }
 
@@ -54,43 +74,106 @@ select,
 button,
 textarea {
   font-size: 16px;
+  border: none;
+  outline: none;
+  font-family: inherit;
 }
 
-/* GLASS EFFECT */
+/* IOS CARD */
 
-.glass {
-  background: rgba(255, 255, 255, 0.06);
+.ios-card {
+  background: rgba(255, 255, 255, 0.72);
 
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px);
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(24px);
+
+  border: 1px solid rgba(255, 255, 255, 0.65);
 
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 10px 30px rgba(15, 23, 42, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+/* IOS BUTTON */
+
+.ios-button {
+  transition:
+    transform 0.15s ease,
+    opacity 0.2s ease,
+    background 0.2s ease;
+}
+
+.ios-button:active {
+  transform: scale(0.97);
+}
+
+/* INPUT */
+
+input,
+select,
+textarea {
+  background: rgba(255, 255, 255, 0.7);
+
+  border: 1px solid rgba(226, 232, 240, 0.9);
+
+  transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(99, 102, 241, 0.35);
+
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.08);
+}
+
+/* REMOVE BLUE IOS */
+
+a,
+button,
+div,
+span {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* REACT DATE PICKER */
+
+.react-datepicker {
+  border: none !important;
+
+  border-radius: 24px !important;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 35px rgba(15, 23, 42, 0.12) !important;
+}
+
+.react-datepicker__header {
+  background: white !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.react-datepicker__day--selected {
+  background: #6366f1 !important;
+  border-radius: 999px !important;
+}
+
+.react-datepicker__day:hover {
+  border-radius: 999px !important;
 }
 
 /* SMOOTH */
 
 button,
 input,
-select {
-  transition: all 0.2s ease;
-}
-
-/* INPUT FOCUS */
-
-input:focus,
-select:focus {
-  outline: none;
-
-  border-color: rgba(255, 255, 255, 0.2);
-
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
-}
-
-/* BUTTON PRESS */
-
-button:active {
-  transform: scale(0.98);
+select,
+textarea,
+div {
+  transition:
+    background 0.25s ease,
+    border 0.25s ease,
+    box-shadow 0.25s ease;
 }

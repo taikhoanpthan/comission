@@ -1,16 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
+
 import { motion } from "framer-motion";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
+import {
+  CalendarDays,
+  BarChart3,
+  Wallet2,
+  Wine,
+} from "lucide-react";
 
 import { api } from "../services/api";
+
 import RevenueChart from "../components/RevenueChart";
+
 import { formatMoney } from "../utils/calculateCommission";
 
 export default function Statistics() {
-  const [sales, setSales] = useState([]);
-  const [filterType, setFilterType] = useState("month"); // month | day
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [sales, setSales] =
+    useState([]);
+
+  const [filterType, setFilterType] =
+    useState("month");
+
+  const [selectedDate, setSelectedDate] =
+    useState(new Date());
 
   useEffect(() => {
     fetchSales();
@@ -18,200 +31,580 @@ export default function Statistics() {
 
   const fetchSales = async () => {
     try {
-      const res = await api.get("/commission");
+      const res = await api.get(
+        "/commission"
+      );
+
       setSales(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // FORMAT DATE
   const formatDate = (date) => {
     const d = new Date(date);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
+
+    const yyyy =
+      d.getFullYear();
+
+    const mm = String(
+      d.getMonth() + 1
+    ).padStart(2, "0");
+
+    const dd = String(
+      d.getDate()
+    ).padStart(2, "0");
+
     return `${yyyy}-${mm}-${dd}`;
   };
 
+  // FORMAT MONTH
   const formatMonth = (date) => {
     const d = new Date(date);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
+
+    const yyyy =
+      d.getFullYear();
+
+    const mm = String(
+      d.getMonth() + 1
+    ).padStart(2, "0");
+
     return `${yyyy}-${mm}`;
   };
 
-  const filteredSales = useMemo(() => {
-    if (filterType === "day") {
-      const day = formatDate(selectedDate);
-      return sales.filter((item) => item.date === day);
-    }
+  // FILTER SALES
+  const filteredSales =
+    useMemo(() => {
+      // DAY
+      if (
+        filterType === "day"
+      ) {
+        const day =
+          formatDate(
+            selectedDate
+          );
 
-    const month = formatMonth(selectedDate);
-    return sales.filter((item) => item.date.startsWith(month));
-  }, [sales, filterType, selectedDate]);
+        return sales.filter(
+          (item) =>
+            item.date === day
+        );
+      }
 
-  const totalMoney = filteredSales.reduce(
-    (acc, item) => acc + Number(item.commission || 0),
-    0
-  );
+      // MONTH
+      const month =
+        formatMonth(
+          selectedDate
+        );
 
-  const totalWine = filteredSales.filter(
-    (item) => item.type === "wine"
-  ).length;
+      return sales.filter(
+        (item) =>
+          item.date.startsWith(
+            month
+          )
+      );
+    }, [
+      sales,
+      filterType,
+      selectedDate,
+    ]);
 
-  const totalAbalone = filteredSales
-    .filter((item) => item.type === "abalone")
-    .reduce((acc, item) => acc + Number(item.abaloneQty || 0), 0);
+  // TOTAL MONEY
+  const totalMoney =
+    filteredSales.reduce(
+      (acc, item) =>
+        acc +
+        Number(
+          item.commission || 0
+        ),
+      0
+    );
+
+  // TOTAL WINE
+  const totalWine =
+    filteredSales.filter(
+      (item) =>
+        item.type === "wine"
+    ).length;
+
+  // TOTAL ABALONE
+  const totalAbalone =
+    filteredSales
+      .filter(
+        (item) =>
+          item.type ===
+          "abalone"
+      )
+      .reduce(
+        (acc, item) =>
+          acc +
+          Number(
+            item.abaloneQty ||
+              0
+          ),
+        0
+      );
 
   const cards = [
     {
-      title: "Tổng tiền",
-      value: formatMoney(totalMoney),
-      icon: "💰",
-      color: "from-green-400 to-emerald-500",
+      title: "Doanh thu",
+      value:
+        formatMoney(
+          totalMoney
+        ),
+      icon: (
+        <Wallet2 size={24} />
+      ),
+      bg: `
+        from-violet-500
+        to-indigo-500
+      `,
+      glow: `
+        bg-violet-400/20
+      `,
     },
+
     {
-      title: "Tổng rượu",
+      title: "Rượu",
       value: totalWine,
-      icon: "🍷",
-      color: "from-blue-400 to-cyan-500",
+      icon: (
+        <Wine size={24} />
+      ),
+      bg: `
+        from-sky-500
+        to-cyan-500
+      `,
+      glow: `
+        bg-sky-400/20
+      `,
     },
+
     {
-      title: "Tổng bào ngư",
+      title: "Bào ngư",
       value: totalAbalone,
       icon: "🦪",
-      color: "from-orange-400 to-amber-500",
+      bg: `
+        from-emerald-500
+        to-teal-500
+      `,
+      glow: `
+        bg-emerald-400/20
+      `,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white p-4 md:p-6 pb-28">
-      
+    <div
+      className="
+        min-h-screen
+        bg-[#f4f7fb]
+        px-4
+        pt-4
+        pb-[120px]
+      "
+    >
+      {/* SAFE AREA */}
+      <div className="h-[env(safe-area-inset-top)]" />
+
       {/* HEADER */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-20 mb-6"
+        initial={{
+          opacity: 0,
+          y: -15,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        className="mb-5"
       >
-        <div className="bg-white/75 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgba(15,23,42,0.06)] rounded-[32px] p-5">
-          
-          <div className="flex items-center justify-between flex-wrap gap-4">
+        <div
+          className="
+            relative
+            overflow-hidden
+            rounded-[32px]
+            bg-white
+            border
+            border-white/60
+            shadow-[0_15px_40px_rgba(15,23,42,0.05)]
+            p-5
+          "
+        >
+          {/* BLUR */}
+          <div
+            className="
+              absolute
+              -top-10
+              -right-10
+              w-40
+              h-40
+              rounded-full
+              bg-violet-200/30
+              blur-3xl
+            "
+          />
 
-            {/* TITLE */}
-            <div>
-              <p className="text-slate-400 text-sm font-medium">Dashboard</p>
-              <h1 className="text-4xl font-black text-slate-800 tracking-tight mt-1">
-                Thống kê
-              </h1>
-              <p className="text-slate-500 mt-2">
-                Theo dõi doanh thu bán hàng
-              </p>
-            </div>
+          <div className="relative z-10">
+            <p
+              className="
+                text-[11px]
+                uppercase
+                tracking-[0.25em]
+                text-slate-400
+                font-medium
+              "
+            >
+              Dashboard
+            </p>
 
-            {/* FILTER */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-stretch sm:items-center">
+            <h1
+              className="
+                mt-2
+                text-[34px]
+                leading-none
+                font-bold
+                tracking-tight
+                text-slate-900
+              "
+            >
+              Thống kê
+            </h1>
 
-              {/* MODE */}
-              <div className="flex bg-white/70 backdrop-blur-xl border border-white/60 rounded-2xl p-1 shadow-sm">
-                <button
-                  onClick={() => setFilterType("month")}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                    filterType === "month"
-                      ? "bg-blue-600 text-white shadow"
-                      : "text-slate-500 hover:text-slate-700"
-                  }`}
-                >
-                  Tháng
-                </button>
-
-                <button
-                  onClick={() => setFilterType("day")}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                    filterType === "day"
-                      ? "bg-blue-600 text-white shadow"
-                      : "text-slate-500 hover:text-slate-700"
-                  }`}
-                >
-                  Ngày
-                </button>
-              </div>
-
-              {/* DATE PICKER */}
-              <div className="relative">
-                <DatePicker
-                  selected={selectedDate}
-                  onChange={(date) => setSelectedDate(date)}
-                  dateFormat={filterType === "day" ? "dd/MM/yyyy" : "MM/yyyy"}
-                  showMonthYearPicker={filterType === "month"}
-                  showFullMonthYearPicker={false}
-                  className="
-                    w-full
-                    bg-white/80
-                    backdrop-blur-xl
-                    border
-                    border-white/60
-                    rounded-2xl
-                    px-4
-                    py-3
-                    text-slate-700
-                    font-medium
-                    shadow-sm
-                    outline-none
-                    focus:ring-4
-                    focus:ring-blue-100
-                  "
-                />
-
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                  📅
-                </div>
-              </div>
-
-            </div>
+            <p className="text-sm text-slate-500 mt-2">
+              Theo dõi doanh thu
+              theo thời gian
+            </p>
           </div>
         </div>
       </motion.div>
 
-      {/* CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {cards.map((card, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="relative overflow-hidden rounded-[32px] bg-white/80 backdrop-blur-2xl border border-white/60 p-6 shadow-[0_10px_40px_rgba(15,23,42,0.06)]"
+      {/* FILTER */}
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          delay: 0.05,
+        }}
+        className="
+          mb-5
+          flex
+          flex-col
+          gap-4
+        "
+      >
+        {/* MODE */}
+        <div
+          className="
+            bg-white
+            border
+            border-slate-100
+            rounded-[26px]
+            p-2
+            shadow-[0_10px_30px_rgba(0,0,0,0.03)]
+            flex
+            gap-2
+          "
+        >
+          {/* MONTH */}
+          <button
+            type="button"
+            onClick={() =>
+              setFilterType(
+                "month"
+              )
+            }
+            className={`
+              flex-1
+              h-[52px]
+              rounded-2xl
+              text-sm
+              font-semibold
+              transition-all
+              ${
+                filterType ===
+                "month"
+                  ? `
+                    bg-violet-600
+                    text-white
+                    shadow-sm
+                  `
+                  : `
+                    text-slate-500
+                  `
+              }
+            `}
           >
-            <div
-              className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${card.color} opacity-10 blur-3xl`}
-            />
+            Theo tháng
+          </button>
 
-            <div className="flex items-start justify-between relative z-10">
-              <div>
-                <p className="text-slate-500 text-sm">{card.title}</p>
-                <h1 className="text-3xl font-black text-slate-800 mt-4">
-                  {card.value}
-                </h1>
-              </div>
+          {/* DAY */}
+          <button
+            type="button"
+            onClick={() =>
+              setFilterType(
+                "day"
+              )
+            }
+            className={`
+              flex-1
+              h-[52px]
+              rounded-2xl
+              text-sm
+              font-semibold
+              transition-all
+              ${
+                filterType ===
+                "day"
+                  ? `
+                    bg-violet-600
+                    text-white
+                    shadow-sm
+                  `
+                  : `
+                    text-slate-500
+                  `
+              }
+            `}
+          >
+            Theo ngày
+          </button>
+        </div>
 
+        {/* DATE PICKER */}
+        <div
+          className="
+            bg-white
+            border
+            border-slate-100
+            rounded-[26px]
+            shadow-[0_10px_30px_rgba(0,0,0,0.03)]
+            px-4
+            h-[58px]
+            flex
+            items-center
+            gap-3
+          "
+        >
+          <CalendarDays
+            size={18}
+            className="text-slate-400"
+          />
+
+          <input
+            type={
+              filterType ===
+              "day"
+                ? "date"
+                : "month"
+            }
+            value={
+              filterType ===
+              "day"
+                ? formatDate(
+                    selectedDate
+                  )
+                : formatMonth(
+                    selectedDate
+                  )
+            }
+            onChange={(e) =>
+              setSelectedDate(
+                new Date(
+                  e.target.value
+                )
+              )
+            }
+            className="
+              flex-1
+              bg-transparent
+              text-slate-700
+              font-medium
+              outline-none
+            "
+          />
+        </div>
+      </motion.div>
+
+      {/* CARDS */}
+      <div className="space-y-4">
+        {cards.map(
+          (card, index) => (
+            <motion.div
+              key={index}
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                delay:
+                  index * 0.08,
+              }}
+              className="
+                relative
+                overflow-hidden
+                rounded-[30px]
+                bg-white
+                border
+                border-white/60
+                shadow-[0_15px_40px_rgba(15,23,42,0.04)]
+                p-5
+              "
+            >
+              {/* GLOW */}
               <div
-                className={`w-16 h-16 rounded-3xl bg-gradient-to-br ${card.color} flex items-center justify-center text-3xl shadow-lg`}
-              >
-                {card.icon}
+                className={`
+                  absolute
+                  -right-10
+                  -top-10
+                  w-40
+                  h-40
+                  rounded-full
+                  blur-3xl
+                  ${card.glow}
+                `}
+              />
+
+              <div className="relative z-10 flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">
+                    {
+                      card.title
+                    }
+                  </p>
+
+                  <h2
+                    className="
+                      mt-2
+                      text-[30px]
+                      leading-none
+                      font-bold
+                      tracking-tight
+                      text-slate-900
+                    "
+                  >
+                    {
+                      card.value
+                    }
+                  </h2>
+                </div>
+
+                <div
+                  className={`
+                    w-14
+                    h-14
+                    rounded-2xl
+                    bg-gradient-to-br
+                    ${card.bg}
+                    text-white
+                    flex
+                    items-center
+                    justify-center
+                    shadow-lg
+                  `}
+                >
+                  {card.icon}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          )
+        )}
       </div>
 
       {/* CHART */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="mt-6 rounded-[32px] bg-white/80 backdrop-blur-2xl border border-white/60 p-5 shadow-[0_10px_40px_rgba(15,23,42,0.06)]"
+        initial={{
+          opacity: 0,
+          y: 25,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          delay: 0.2,
+        }}
+        className="
+          mt-5
+          relative
+          overflow-hidden
+          rounded-[32px]
+          bg-white
+          border
+          border-white/60
+          shadow-[0_15px_40px_rgba(15,23,42,0.05)]
+          p-5
+        "
       >
-        <RevenueChart sales={filteredSales} />
+        {/* GLOW */}
+        <div
+          className="
+            absolute
+            -top-10
+            -right-10
+            w-40
+            h-40
+            rounded-full
+            bg-cyan-200/20
+            blur-3xl
+          "
+        />
+
+        <div className="relative z-10">
+          {/* TITLE */}
+          <div className="flex items-center gap-3 mb-5">
+            <div
+              className="
+                w-12
+                h-12
+                rounded-2xl
+                bg-violet-100
+                flex
+                items-center
+                justify-center
+                text-violet-600
+              "
+            >
+              <BarChart3
+                size={22}
+              />
+            </div>
+
+            <div>
+              <h2
+                className="
+                  text-xl
+                  font-bold
+                  text-slate-900
+                "
+              >
+                Biểu đồ doanh
+                thu
+              </h2>
+
+              <p className="text-sm text-slate-500">
+                Phân tích dữ
+                liệu bán hàng
+              </p>
+            </div>
+          </div>
+
+          {/* CHART */}
+          <RevenueChart
+            sales={
+              filteredSales
+            }
+          />
+        </div>
       </motion.div>
     </div>
   );
