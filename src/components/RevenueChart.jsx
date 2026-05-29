@@ -7,9 +7,12 @@ import {
   PointElement,
   LineElement,
   Tooltip,
+  BarElement,
 } from "chart.js";
 
-import { Line } from "react-chartjs-2";
+import {
+  Line,
+} from "react-chartjs-2";
 
 import { motion } from "framer-motion";
 
@@ -25,6 +28,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Tooltip,
   Legend,
   Filler
@@ -33,6 +37,7 @@ ChartJS.register(
 export default function RevenueChart({
   sales = [],
 }) {
+
   // =========================
   // LAST 6 MONTHS
   // =========================
@@ -40,11 +45,7 @@ export default function RevenueChart({
 
   const now = new Date();
 
-  for (
-    let i = 5;
-    i >= 0;
-    i--
-  ) {
+  for (let i = 5; i >= 0; i--) {
     const d = new Date(now);
 
     d.setMonth(
@@ -105,7 +106,7 @@ export default function RevenueChart({
     ];
 
   // =========================
-  // FORMAT LABEL
+  // LABELS
   // =========================
   const labels = months.map(
     (month) => {
@@ -125,8 +126,29 @@ export default function RevenueChart({
     labels,
 
     datasets: [
+      // BAR
       {
-        label: "Doanh thu",
+        type: "bar",
+
+        label: "Revenue",
+
+        data: values,
+
+        backgroundColor:
+          "rgba(34,211,238,0.16)",
+
+        borderRadius: 14,
+
+        borderSkipped: false,
+
+        barThickness: 36,
+      },
+
+      // LINE
+      {
+        type: "line",
+
+        label: "Trend",
 
         data: values,
 
@@ -142,17 +164,17 @@ export default function RevenueChart({
 
         borderWidth: 3,
 
-        pointRadius: 0,
+        pointRadius: 5,
 
-        pointHoverRadius: 7,
+        pointHoverRadius: 8,
 
-        pointHoverBorderWidth: 4,
-
-        pointHoverBackgroundColor:
-          "#0f172a",
-
-        pointHoverBorderColor:
+        pointBackgroundColor:
           "#22d3ee",
+
+        pointBorderWidth: 3,
+
+        pointBorderColor:
+          "#0f172a",
       },
     ],
   };
@@ -236,8 +258,7 @@ export default function RevenueChart({
             value
           ) {
             if (
-              value >=
-              1000000
+              value >= 1000000
             ) {
               return `${value / 1000000}M`;
             }
@@ -256,8 +277,10 @@ export default function RevenueChart({
 
   return (
     <div>
+
       {/* TOP CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+
         {/* TOTAL */}
         <motion.div
           whileHover={{
@@ -272,7 +295,6 @@ export default function RevenueChart({
             y: 0,
           }}
           className="
-            group
             relative
             overflow-hidden
             rounded-[30px]
@@ -281,32 +303,9 @@ export default function RevenueChart({
             bg-white/[0.03]
             backdrop-blur-2xl
             p-5
-
-            shadow-[0_0_25px_rgba(34,211,238,0.08)]
-
-            hover:border-cyan-400/40
-            transition-all
-            duration-300
           "
         >
-          {/* NEON BORDER */}
-          <div
-            className="
-              absolute
-              inset-0
-              rounded-[30px]
-              bg-gradient-to-br
-              from-cyan-400/10
-              via-transparent
-              to-fuchsia-500/10
-              opacity-0
-              group-hover:opacity-100
-              transition-all
-              duration-500
-            "
-          />
 
-          {/* GLOW */}
           <div
             className="
               absolute
@@ -315,39 +314,31 @@ export default function RevenueChart({
               w-52
               h-52
               rounded-full
-              bg-cyan-400/20
+              bg-cyan-400/15
               blur-3xl
             "
           />
 
           <div className="relative z-10">
+
             <div
               className="
-                w-14
-                h-14
-                rounded-2xl
-                bg-cyan-400/10
-                border
-                border-cyan-400/20
-                text-cyan-300
-                backdrop-blur-xl
                 flex
+                h-14
+                w-14
                 items-center
                 justify-center
-
-                shadow-[0_0_20px_rgba(34,211,238,0.15)]
+                rounded-2xl
+                border
+                border-cyan-400/20
+                bg-cyan-400/10
+                text-cyan-300
               "
             >
               <Wallet2 size={24} />
             </div>
 
-            <p
-              className="
-                mt-5
-                text-cyan-200/60
-                text-sm
-              "
-            >
+            <p className="mt-5 text-sm text-cyan-200/60">
               Tổng doanh thu
             </p>
 
@@ -355,16 +346,16 @@ export default function RevenueChart({
               className="
                 mt-2
                 text-[30px]
-                leading-none
                 font-black
+                leading-none
                 tracking-tight
-                text-white
               "
             >
               {formatMoney(
                 totalRevenue
               )}
             </h2>
+
           </div>
         </motion.div>
 
@@ -385,7 +376,6 @@ export default function RevenueChart({
             delay: 0.05,
           }}
           className="
-            group
             relative
             overflow-hidden
             rounded-[30px]
@@ -394,15 +384,9 @@ export default function RevenueChart({
             bg-white/[0.03]
             backdrop-blur-2xl
             p-5
-
-            shadow-[0_0_30px_rgba(168,85,247,0.08)]
-
-            hover:border-fuchsia-500/40
-            transition-all
-            duration-300
           "
         >
-          {/* GLOW */}
+
           <div
             className="
               absolute
@@ -411,26 +395,25 @@ export default function RevenueChart({
               w-52
               h-52
               rounded-full
-              bg-fuchsia-500/20
+              bg-fuchsia-500/15
               blur-3xl
             "
           />
 
           <div className="relative z-10">
+
             <div
               className="
-                w-14
-                h-14
-                rounded-2xl
-                bg-fuchsia-500/10
-                border
-                border-fuchsia-500/20
-                text-fuchsia-300
                 flex
+                h-14
+                w-14
                 items-center
                 justify-center
-
-                shadow-[0_0_20px_rgba(168,85,247,0.15)]
+                rounded-2xl
+                border
+                border-fuchsia-500/20
+                bg-fuchsia-500/10
+                text-fuchsia-300
               "
             >
               <TrendingUp
@@ -438,13 +421,7 @@ export default function RevenueChart({
               />
             </div>
 
-            <p
-              className="
-                mt-5
-                text-fuchsia-200/60
-                text-sm
-              "
-            >
+            <p className="mt-5 text-sm text-fuchsia-200/60">
               Tháng cao nhất
             </p>
 
@@ -452,30 +429,24 @@ export default function RevenueChart({
               className="
                 mt-2
                 text-[30px]
-                leading-none
                 font-black
-                text-white
+                leading-none
               "
             >
               {bestMonth}
             </h2>
 
-            <p
-              className="
-                mt-3
-                text-fuchsia-300
-                font-semibold
-              "
-            >
+            <p className="mt-3 font-semibold text-fuchsia-300">
               {formatMoney(
                 maxValue
               )}
             </p>
+
           </div>
         </motion.div>
       </div>
 
-      {/* CHART CARD */}
+      {/* CHART */}
       <motion.div
         initial={{
           opacity: 0,
@@ -492,34 +463,13 @@ export default function RevenueChart({
           relative
           overflow-hidden
           rounded-[34px]
-
-          bg-white/[0.03]
-          backdrop-blur-2xl
-
           border
           border-cyan-400/20
-
+          bg-white/[0.03]
+          backdrop-blur-2xl
           p-5
-
-          shadow-[0_0_40px_rgba(34,211,238,0.05)]
         "
       >
-        {/* BORDER GLOW */}
-        <div
-          className="
-            absolute
-            inset-0
-            rounded-[34px]
-            p-[1px]
-            bg-gradient-to-br
-            from-cyan-400/30
-            via-fuchsia-500/10
-            to-blue-500/20
-            [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
-            [mask-composite:exclude]
-            pointer-events-none
-          "
-        />
 
         {/* GLOW */}
         <div
@@ -536,8 +486,10 @@ export default function RevenueChart({
         />
 
         <div className="relative z-10">
+
           {/* HEADER */}
           <div className="mb-8">
+
             <p
               className="
                 text-[11px]
@@ -554,36 +506,29 @@ export default function RevenueChart({
               className="
                 mt-3
                 text-[30px]
-                leading-none
                 font-black
+                leading-none
                 tracking-tight
-                text-white
               "
             >
               Revenue Overview
             </h2>
 
-            <p
-              className="
-                text-sm
-                text-slate-400
-                mt-3
-              "
-            >
+            <p className="mt-3 text-sm text-slate-400">
               Hiệu suất doanh thu
               6 tháng gần nhất
             </p>
+
           </div>
 
           {/* CHART */}
-          <div className="h-[320px]">
+          <div className="h-[340px]">
             <Line
               data={data}
-              options={
-                options
-              }
+              options={options}
             />
           </div>
+
         </div>
       </motion.div>
     </div>
