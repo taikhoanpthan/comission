@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 
 import { getSales, createSale } from "../services/api";
@@ -8,6 +8,11 @@ import SummaryCards from "../components/SummaryCards";
 
 export default function Home() {
   const [sales, setSales] = useState([]);
+
+  // mặc định tháng hiện tại
+  const [selectedMonth, setSelectedMonth] = useState(
+    new Date().toISOString().slice(0, 7)
+  );
 
   useEffect(() => {
     fetchSales();
@@ -31,9 +36,24 @@ export default function Home() {
     }
   };
 
+  // lọc doanh thu theo tháng được chọn
+  const filteredSales = useMemo(() => {
+    return sales.filter((sale) => {
+      const saleDate = new Date(
+        sale.date || sale.createdAt || Date.now()
+      );
+
+      const month =
+        `${saleDate.getFullYear()}-${String(
+          saleDate.getMonth() + 1
+        ).padStart(2, "0")}`;
+
+      return month === selectedMonth;
+    });
+  }, [sales, selectedMonth]);
+
   return (
     <div className="relative min-h-screen text-white">
-
       <div className="relative z-10 px-4 pt-3">
 
         {/* HEADER */}
@@ -42,7 +62,8 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-5"
         >
-          <div className="
+          <div
+            className="
             relative
             overflow-hidden
             rounded-[28px]
@@ -50,15 +71,12 @@ export default function Home() {
             bg-white/[0.04]
             backdrop-blur-2xl
             p-5
-            shadow-[0_0_40px_rgba(0,255,255,0.04)]
-          ">
-
-            {/* glow */}
+          "
+          >
             <div className="absolute -top-20 -right-10 w-72 h-72 bg-cyan-500/10 blur-3xl rounded-full" />
             <div className="absolute -bottom-20 -left-10 w-72 h-72 bg-fuchsia-500/10 blur-3xl rounded-full" />
 
             <div className="relative z-10 flex items-center justify-between">
-
               <div>
                 <p className="text-[11px] tracking-[0.35em] uppercase text-cyan-200/50">
                   MMO COMMISSION
@@ -79,10 +97,34 @@ export default function Home() {
                   A
                 </div>
               </div>
-
             </div>
           </div>
         </motion.div>
+
+        {/* CHỌN THÁNG */}
+        <div className="mb-5">
+          <div className="rounded-[24px] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-4">
+            <label className="block text-sm text-slate-400 mb-2">
+              Xem doanh thu theo tháng
+            </label>
+
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="
+                w-full
+                rounded-xl
+                border border-white/10
+                bg-slate-900
+                px-4
+                py-3
+                text-white
+                outline-none
+              "
+            />
+          </div>
+        </div>
 
         {/* SUMMARY */}
         <motion.div
@@ -92,7 +134,7 @@ export default function Home() {
           className="mb-5"
         >
           <div className="rounded-[28px] bg-white/[0.03] border border-white/10 backdrop-blur-xl p-3">
-            <SummaryCards sales={sales} />
+            <SummaryCards sales={filteredSales} />
           </div>
         </motion.div>
 
@@ -102,7 +144,8 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <div className="
+          <div
+            className="
             relative
             overflow-hidden
             rounded-[30px]
@@ -110,12 +153,15 @@ export default function Home() {
             bg-white/[0.03]
             backdrop-blur-2xl
             p-4
-          ">
-
+          "
+          >
             <div className="absolute -top-24 -right-24 w-80 h-80 bg-cyan-500/10 blur-3xl rounded-full" />
 
             <div className="relative z-10 mb-4">
-              <h2 className="text-lg font-bold">Thêm giao dịch</h2>
+              <h2 className="text-lg font-bold">
+                Thêm giao dịch
+              </h2>
+
               <p className="text-sm text-slate-400 mt-1">
                 Nhập thông tin commission hôm nay
               </p>
@@ -124,7 +170,6 @@ export default function Home() {
             <div className="relative z-10">
               <SaleForm onSubmit={handleCreate} />
             </div>
-
           </div>
         </motion.div>
 
