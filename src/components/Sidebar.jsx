@@ -1,107 +1,57 @@
 import { NavLink } from "react-router-dom";
-import { FaHome, FaChartBar, FaHistory } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { LayoutDashboard, BarChart3, History, ReceiptText } from "lucide-react";
+
+const navigation = [
+  { to: "/", label: "Tổng quan", icon: LayoutDashboard },
+  { to: "/statistics", label: "Thống kê", icon: BarChart3 },
+  { to: "/history", label: "Lịch sử giao dịch", icon: History },
+];
 
 export default function Sidebar() {
   return (
     <>
-      {/* MOBILE MMO DOCK */}
-      <div className="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-[430px]">
-
-        <div className="relative overflow-hidden rounded-full border border-cyan-400/20 bg-[#050510]/70 backdrop-blur-2xl shadow-[0_0_40px_rgba(0,255,255,0.08)] px-3 py-3">
-
-          {/* neon glow background */}
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-52 h-24 bg-cyan-500/10 blur-3xl" />
-
-          <div className="relative z-10 grid grid-cols-3">
-
-            {/* HOME */}
-            <NavLink to="/">
-              {({ isActive }) => (
-                <div className="relative flex flex-col items-center justify-center h-[64px]">
-
-                  {isActive && (
-                    <motion.div
-                      layoutId="mmoTab"
-                      transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                      className="absolute w-[54px] h-[54px] rounded-full bg-cyan-500/10 border border-cyan-400/30 shadow-[0_0_20px_rgba(0,255,255,0.25)]"
-                    />
-                  )}
-
-                  <div
-                    className={`relative z-10 flex flex-col items-center transition ${
-                      isActive ? "text-cyan-300" : "text-slate-500"
-                    }`}
-                  >
-                    <FaHome size={20} />
-                    <span className="mt-1 text-[11px] font-semibold">
-                      Home
-                    </span>
-                  </div>
-
-                </div>
-              )}
-            </NavLink>
-
-            {/* STATS */}
-            <NavLink to="/statistics">
-              {({ isActive }) => (
-                <div className="relative flex flex-col items-center justify-center h-[64px]">
-
-                  {isActive && (
-                    <motion.div
-                      layoutId="mmoTab"
-                      transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                      className="absolute w-[54px] h-[54px] rounded-full bg-fuchsia-500/10 border border-fuchsia-400/30 shadow-[0_0_20px_rgba(255,0,200,0.2)]"
-                    />
-                  )}
-
-                  <div
-                    className={`relative z-10 flex flex-col items-center transition ${
-                      isActive ? "text-fuchsia-300" : "text-slate-500"
-                    }`}
-                  >
-                    <FaChartBar size={20} />
-                    <span className="mt-1 text-[11px] font-semibold">
-                      Stats
-                    </span>
-                  </div>
-
-                </div>
-              )}
-            </NavLink>
-
-            {/* HISTORY */}
-            <NavLink to="/history">
-              {({ isActive }) => (
-                <div className="relative flex flex-col items-center justify-center h-[64px]">
-
-                  {isActive && (
-                    <motion.div
-                      layoutId="mmoTab"
-                      transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                      className="absolute w-[54px] h-[54px] rounded-full bg-emerald-500/10 border border-emerald-400/30 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
-                    />
-                  )}
-
-                  <div
-                    className={`relative z-10 flex flex-col items-center transition ${
-                      isActive ? "text-emerald-300" : "text-slate-500"
-                    }`}
-                  >
-                    <FaHistory size={20} />
-                    <span className="mt-1 text-[11px] font-semibold">
-                      History
-                    </span>
-                  </div>
-
-                </div>
-              )}
-            </NavLink>
-
-          </div>
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-[240px] flex-col bg-[#172033] text-slate-300 lg:flex">
+        <div className="flex h-16 items-center gap-3 border-b border-white/10 px-5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#1677ff] text-white">
+          <ReceiptText size={18} />
+        </div>
+        <div>
+          <div className="text-sm font-semibold text-white">Commission</div>
+          <div className="text-[11px] text-slate-400">Management System</div>
         </div>
       </div>
+
+        <nav className="flex-1 px-3 py-4">
+        <div className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Điều hướng</div>
+        <div className="space-y-1">
+          {navigation.map(({ to, label, icon: Icon }) => (
+            <NavLink key={to} to={to} end={to === "/"}>
+              {({ isActive }) => (
+                <div className={`flex h-10 items-center gap-3 rounded-md px-3 text-sm transition-colors ${isActive ? "bg-[#274a78] text-white" : "hover:bg-white/[0.06] hover:text-white"}`}>
+                  <Icon size={17} />
+                  {label}
+                </div>
+              )}
+            </NavLink>
+          ))}
+        </div>
+        </nav>
+
+        <div className="border-t border-white/10 p-4 text-xs text-slate-500">Phiên bản 1.0.0</div>
+      </aside>
+
+      <nav className="fixed inset-x-0 bottom-0 z-50 grid h-16 grid-cols-3 border-t border-[#dfe4eb] bg-white lg:hidden">
+        {navigation.map(({ to, label, icon: Icon }) => (
+          <NavLink key={to} to={to} end={to === "/"} className="flex items-stretch justify-center">
+            {({ isActive }) => (
+              <div className={`flex w-full flex-col items-center justify-center gap-1 border-t-2 text-[11px] font-medium ${isActive ? "border-[#1677ff] bg-[#f0f7ff] text-[#1677ff]" : "border-transparent text-[#6b7280]"}`}>
+                <Icon size={18} />
+                <span>{label}</span>
+              </div>
+            )}
+          </NavLink>
+        ))}
+      </nav>
     </>
   );
 }

@@ -1,143 +1,37 @@
+import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
+import { Bell, ChevronRight, CircleHelp, Moon, Sun } from "lucide-react";
 
 export default function Layout({ children }) {
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("commission-theme") === "dark");
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("commission-theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
   return (
-    <div
-      className="
-        relative
-        min-h-screen
-        flex
-        overflow-hidden
-        bg-[#050816]
-        text-white
-      "
-    >
-      {/* GLOBAL BACKGROUND */}
-      <div
-        className="
-          absolute
-          inset-0
-          bg-[radial-gradient(circle_at_top_left,rgba(0,255,255,0.10),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.14),transparent_35%),linear-gradient(to_bottom_right,#050816,#070a14,#0b1220)]
-          pointer-events-none
-        "
-      />
-
-      {/* SOFT NOISE GRID (SMOOTH VERSION) */}
-      <div
-        className="
-          absolute
-          inset-0
-          opacity-[0.02]
-          bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)]
-          bg-[size:90px_90px]
-          pointer-events-none
-        "
-      />
-
-      {/* SIDEBAR */}
+    <div className="min-h-screen bg-[#f3f5f8] text-[#1f2937]">
       <Sidebar />
-
-      {/* CONTENT */}
-      <main
-        className="
-          relative
-          z-10
-          flex-1
-          overflow-y-auto
-          overflow-x-hidden
-          p-3
-          md:p-6
-          lg:p-8
-          pb-28
-          lg:pb-8
-        "
-      >
-        <div
-          className="
-            relative
-            min-h-[calc(100vh-24px)]
-            rounded-[34px]
-            overflow-hidden
-
-            bg-white/[0.03]
-            backdrop-blur-2xl
-
-            border
-            border-cyan-400/15
-
-            shadow-[0_0_25px_rgba(34,211,238,0.08),0_0_90px_rgba(168,85,247,0.08)]
-
-            before:absolute
-            before:inset-0
-            before:rounded-[34px]
-            before:p-[1px]
-            before:bg-gradient-to-br
-            before:from-cyan-400/40
-            before:via-fuchsia-500/25
-            before:to-blue-500/30
-            before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
-            before:[mask-composite:exclude]
-            before:pointer-events-none
-          "
-        >
-          {/* TOP LIGHT */}
-          <div
-            className="
-              absolute
-              top-0
-              left-0
-              w-full
-              h-40
-              bg-gradient-to-b
-              from-cyan-400/10
-              to-transparent
-              pointer-events-none
-            "
-          />
-
-          {/* PURPLE GLOW */}
-          <div
-            className="
-              absolute
-              -top-28
-              -right-28
-              w-96
-              h-96
-              rounded-full
-              bg-fuchsia-500/15
-              blur-3xl
-              pointer-events-none
-            "
-          />
-
-          {/* BLUE GLOW */}
-          <div
-            className="
-              absolute
-              bottom-0
-              left-0
-              w-80
-              h-80
-              rounded-full
-              bg-cyan-400/10
-              blur-3xl
-              pointer-events-none
-            "
-          />
-
-          {/* CONTENT */}
-          <div
-            className="
-              relative
-              z-10
-              p-4
-              md:p-6
-              lg:p-8
-            "
-          >
-            {children}
+      <main className="min-h-screen pb-16 lg:ml-[240px] lg:pb-0">
+        <div className="flex h-15 items-center justify-between border-b border-[#e1e6ed] bg-white px-4 lg:h-16 lg:px-6">
+          <div className="flex items-center gap-2 text-xs text-[#7b8797]">
+            <span className="font-medium text-[#4b5563]">Vận hành</span>
+            <ChevronRight size={14} className="text-[#b2bac6]" />
+            <span>Commission</span>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden items-center gap-1.5 rounded-full border border-[#dcecdf] bg-[#f6ffed] px-2.5 py-1 text-[11px] font-medium text-[#389e0d] sm:flex"><span className="h-1.5 w-1.5 rounded-full bg-[#52c41a]" />Hệ thống hoạt động</div>
+            <button type="button" onClick={() => setDarkMode((current) => !current)} aria-label={darkMode ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"} className="flex h-8 w-8 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f3f5f8]">{darkMode ? <Sun size={17} /> : <Moon size={17} />}</button>
+            <button type="button" aria-label="Trợ giúp" className="flex h-8 w-8 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f3f5f8]"><CircleHelp size={17} /></button>
+            <button type="button" aria-label="Thông báo" className="relative flex h-8 w-8 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f3f5f8]"><Bell size={17} /><span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#ff4d4f]" /></button>
+            <div className="ml-1 flex items-center gap-2 border-l border-[#e5e7eb] pl-3">
+              <div className="hidden text-right sm:block"><div className="text-xs font-medium text-[#374151]">Quản trị viên</div><div className="text-[10px] text-[#8c98a8]">Administrator</div></div>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e6f4ff] text-xs font-semibold text-[#1677ff]">A</div>
+            </div>
           </div>
         </div>
+        <div className="mx-auto max-w-[1600px] p-4 lg:p-6">{children}</div>
       </main>
     </div>
   );
