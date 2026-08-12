@@ -74,7 +74,7 @@ export default function Home() {
       {/* ================= MAIN ================= */}
       <main>
         {/* ================= PAGE TITLE ================= */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-5"
@@ -100,10 +100,10 @@ export default function Home() {
 
             <div className="flex items-center gap-2"><Tag color="blue" className="m-0 w-fit px-3 py-1 text-xs">Kỳ báo cáo: {formattedMonth}</Tag><Tooltip title="Làm mới dữ liệu"><Button type="text" icon={<ReloadOutlined />} loading={loading} onClick={fetchSales} className="text-[#6b7280]" /></Tooltip></div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* ================= FILTER BAR ================= */}
-        <motion.section
+        {/* <motion.section
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
@@ -136,10 +136,10 @@ export default function Home() {
               />
             </div>
           </div>
-        </motion.section>
+        </motion.section> */}
 
         {/* ================= SUMMARY ================= */}
-        <motion.section
+        {/* <motion.section
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -164,7 +164,7 @@ export default function Home() {
           <div className="rounded-xl border border-[#e5e7eb] bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-4">
             <SummaryCards sales={filteredSales} />
           </div>
-        </motion.section>
+        </motion.section> */}
 
         {/* ================= CONTENT GRID ================= */}
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
