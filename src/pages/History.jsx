@@ -10,6 +10,7 @@ import {
   Trash2,
   ChevronRight,
   Database,
+  Check,
 } from "lucide-react";
 
 import { api } from "../services/api";
@@ -38,8 +39,7 @@ export default function History() {
 
       const sorted = (res.data || []).sort(
         (a, b) =>
-          new Date(b.date || b.createdAt) -
-          new Date(a.date || a.createdAt)
+          new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt),
       );
 
       setSales(sorted);
@@ -82,7 +82,7 @@ export default function History() {
   const totalIncome = useMemo(() => {
     return filteredSales.reduce(
       (acc, item) => acc + Number(item.commission || 0),
-      0
+      0,
     );
   }, [filteredSales]);
 
@@ -123,9 +123,7 @@ export default function History() {
     try {
       await api.delete(`/commission/${id}`);
 
-      setSales((prev) =>
-        prev.filter((item) => item.id !== id)
-      );
+      setSales((prev) => prev.filter((item) => item.id !== id));
 
       await Swal.fire({
         title: "Đã xóa",
@@ -152,16 +150,47 @@ export default function History() {
   };
 
   // =====================================================
+  // TOGGLE COLLECTED
+  // =====================================================
+
+  const handleToggleCollected = async (sale) => {
+    try {
+      // Lấy dữ liệu mới nhất từ MockAPI
+      const res = await api.get(`/commission/${sale.id}`);
+
+      const latestSale = res.data;
+
+      const updatedSale = {
+        ...latestSale,
+        isCollected: !Boolean(latestSale.isCollected),
+      };
+
+      await api.put(`/commission/${sale.id}`, updatedSale);
+
+      setSales((prev) =>
+        prev.map((item) => (item.id === sale.id ? updatedSale : item)),
+      );
+    } catch (err) {
+      console.log(err);
+
+      await Swal.fire({
+        title: "Có lỗi xảy ra",
+        text: "Không thể cập nhật trạng thái lấy bill.",
+        icon: "error",
+        confirmButtonText: "Đóng",
+        confirmButtonColor: "#1677ff",
+      });
+    }
+  };
+
+  // =====================================================
   // MONTH LABEL
   // =====================================================
 
-  const monthLabel = selectedMonth.toLocaleDateString(
-    "vi-VN",
-    {
-      month: "long",
-      year: "numeric",
-    }
-  );
+  const monthLabel = selectedMonth.toLocaleDateString("vi-VN", {
+    month: "long",
+    year: "numeric",
+  });
 
   // =====================================================
   // RENDER
@@ -182,10 +211,7 @@ export default function History() {
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
             <div>
               <div className="mb-1 flex items-center gap-2">
-                <Database
-                  size={15}
-                  className="text-[#1677ff]"
-                />
+                <Database size={15} className="text-[#1677ff]" />
 
                 <span className="text-xs font-medium uppercase tracking-wide text-[#8c8c8c]">
                   Commission Management
@@ -202,10 +228,7 @@ export default function History() {
             </div>
 
             <div className="flex items-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3 py-2">
-              <CalendarDays
-                size={16}
-                className="text-[#1677ff]"
-              />
+              <CalendarDays size={16} className="text-[#1677ff]" />
 
               <span className="text-sm font-medium capitalize text-[#374151]">
                 {monthLabel}
@@ -356,21 +379,17 @@ export default function History() {
               {/* MONTH */}
 
               <div>
-                <div className="mb-2 text-xs text-[#8c8c8c]">
-                  Tháng báo cáo
-                </div>
+                <div className="mb-2 text-xs text-[#8c8c8c]">Tháng báo cáo</div>
 
                 <input
                   type="month"
                   value={`${selectedMonth.getFullYear()}-${String(
-                    selectedMonth.getMonth() + 1
+                    selectedMonth.getMonth() + 1,
                   ).padStart(2, "0")}`}
                   onChange={(e) => {
                     if (!e.target.value) return;
 
-                    setSelectedMonth(
-                      new Date(`${e.target.value}-01`)
-                    );
+                    setSelectedMonth(new Date(`${e.target.value}-01`));
 
                     setFilter("month");
                   }}
@@ -443,14 +462,16 @@ export default function History() {
               <div>
                 {/* DESKTOP TABLE HEADER */}
 
-                <div className="hidden grid-cols-[60px_1.5fr_1fr_1fr_180px_40px] items-center border-b border-[#f0f0f0] bg-[#fafafa] px-4 py-3 text-xs font-medium text-[#595959] md:grid">
+                <div className="hidden grid-cols-[60px_1.5fr_1fr_1fr_180px_70px_40px] items-center border-b border-[#f0f0f0] bg-[#fafafa] px-4 py-3 text-xs font-medium text-[#595959] md:grid">
                   <div>STT</div>
                   <div>Loại giao dịch</div>
                   <div>Bàn</div>
                   <div>Ca</div>
-                  <div className="text-right">
-                    Commission
-                  </div>
+
+                  <div className="text-right">Commission</div>
+
+                  <div className="text-center">Đã lấy</div>
+
                   <div />
                 </div>
 
@@ -476,7 +497,7 @@ export default function History() {
                     >
                       {/* DESKTOP */}
 
-                      <div className="hidden min-h-[76px] grid-cols-[60px_1.5fr_1fr_1fr_180px_40px] items-center px-4 transition-colors hover:bg-[#fafafa] md:grid">
+                      <div className="hidden min-h-[76px] grid-cols-[60px_1.5fr_1fr_1fr_180px_70px_40px] items-center px-4 transition-colors hover:bg-[#fafafa] md:grid">
                         {/* STT */}
 
                         <div className="text-xs text-[#8c8c8c]">
@@ -516,9 +537,7 @@ export default function History() {
                         {/* TABLE */}
 
                         <div className="text-sm text-[#595959]">
-                          {sale.tableNumber
-                            ? `Bàn ${sale.tableNumber}`
-                            : "--"}
+                          {sale.tableNumber ? `Bàn ${sale.tableNumber}` : "--"}
                         </div>
 
                         {/* SHIFT */}
@@ -531,12 +550,7 @@ export default function History() {
 
                         <div className="text-right">
                           <div className="text-sm font-semibold text-[#1677ff]">
-                            +{" "}
-                            {formatMoney(
-                              Number(
-                                sale.commission || 0
-                              )
-                            )}
+                            + {formatMoney(Number(sale.commission || 0))}
                           </div>
 
                           <div className="mt-0.5 text-[11px] text-[#9ca3af]">
@@ -544,13 +558,28 @@ export default function History() {
                           </div>
                         </div>
 
+                        {/* COLLECTED */}
+
+                        <button
+                          type="button"
+                          onClick={() => handleToggleCollected(sale)}
+                          title={
+                            sale.isCollected ? "Đã lấy bill" : "Chưa lấy bill"
+                          }
+                          className={`mx-auto flex h-8 w-8 items-center justify-center rounded-md transition-all ${
+                            sale.isCollected
+                              ? "bg-[#f6ffed] text-[#52c41a]"
+                              : "bg-[#f5f5f5] text-[#bfbfbf] hover:bg-[#f6ffed] hover:text-[#52c41a]"
+                          }`}
+                        >
+                          <Check size={16} />
+                        </button>
+
                         {/* DELETE */}
 
                         <button
                           type="button"
-                          onClick={() =>
-                            handleDelete(sale.id)
-                          }
+                          onClick={() => handleDelete(sale.id)}
                           className="flex h-8 w-8 items-center justify-center rounded-md text-[#bfbfbf] opacity-0 transition-all hover:bg-[#fff1f0] hover:text-[#ff4d4f] group-hover:opacity-100"
                         >
                           <Trash2 size={15} />
@@ -599,19 +628,11 @@ export default function History() {
                             </div>
 
                             <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[#8c8c8c]">
-                              <span>
-                                Bàn{" "}
-                                {sale.tableNumber ||
-                                  "--"}
-                              </span>
+                              <span>Bàn {sale.tableNumber || "--"}</span>
 
-                              <span>
-                                {sale.shift || "--"}
-                              </span>
+                              <span>{sale.shift || "--"}</span>
 
-                              <span>
-                                {sale.date || "--"}
-                              </span>
+                              <span>{sale.date || "--"}</span>
                             </div>
                           </div>
 
@@ -623,14 +644,26 @@ export default function History() {
                             </div>
 
                             <div className="mt-0.5 text-sm font-semibold text-[#1677ff]">
-                              +
-                              {formatMoney(
-                                Number(
-                                  sale.commission || 0
-                                )
-                              )}
+                              +{formatMoney(Number(sale.commission || 0))}
                             </div>
                           </div>
+
+                          {/* COLLECTED */}
+
+                          <button
+                            type="button"
+                            onClick={() => handleToggleCollected(sale)}
+                            title={
+                              sale.isCollected ? "Đã lấy bill" : "Chưa lấy bill"
+                            }
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-all ${
+                              sale.isCollected
+                                ? "bg-[#f6ffed] text-[#52c41a]"
+                                : "bg-[#f5f5f5] text-[#bfbfbf] hover:bg-[#f6ffed] hover:text-[#52c41a]"
+                            }`}
+                          >
+                            <Check size={16} />
+                          </button>
 
                           <ChevronRight
                             size={16}
